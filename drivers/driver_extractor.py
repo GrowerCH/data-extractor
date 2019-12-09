@@ -39,7 +39,7 @@ def extract_performances(browser):
         if len(cells) == 1:
             model = cells[0].text.replace(" Series", "")
 
-            if not re.match(r"(E|H)LG-", model):
+            if not re.match(r"(ELG|HLG|HVGC)-", model):
                 current_driver = None
                 continue
 
@@ -58,8 +58,8 @@ def extract_performances(browser):
                 continue
 
             voltage = cells[3].text.split("-")
-            min_voltage = int(voltage[0])
-            max_voltage = int(voltage[1])
+            min_voltage = float(voltage[0])
+            max_voltage = float(voltage[1])
             current = float(cells[4].text)
 
             performance = Performance(current, min_voltage, max_voltage)
