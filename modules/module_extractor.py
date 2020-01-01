@@ -66,7 +66,6 @@ def extract_module_data(products_json, modules_json, currents, browser):
             cri = int(float(product["CRI"]))
 
             price = load_price(browser, product_code)
-            time.sleep(1)
 
             performances = calculate_performances(product, module, currents, max_current)
 
@@ -102,13 +101,22 @@ def extract_dimensions(text):
 
 def init_browser():
     os.environ["MOZ_HEADLESS"] = "1"
-    browser = webdriver.Firefox()
+
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.cache.offline.enable", False)
+    profile.set_preference("network.http.use-cache", False)
+
+    browser = webdriver.Firefox(profile)
+
     return browser
 
 
 def load_price(browser, product_code):
     url = "https://octopart.com/search?q=" + product_code
     browser.get(url)
+    time.sleep(1)
 
     table = browser.find_element_by_class_name("serp-part-card")
 
