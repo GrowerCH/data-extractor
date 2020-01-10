@@ -33,11 +33,10 @@ def extract_important_led_data(led_data, version_data, performance_data, needed)
             continue
 
         index = int(data["Index"])
-        min_current = float(data["Sorting_IF"])
         max_current = float(data["IF_max"])
         versions = []
 
-        yield LED(name, min_current, max_current, versions)
+        yield LED(name, max_current, versions)
 
         for version in version_data:
             if version["Name"] != name:

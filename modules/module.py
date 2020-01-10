@@ -1,11 +1,10 @@
 class Module:
-    def __init__(self, model, seller, led, parallel_number, series_number, max_current, dimensions, versions):
+    def __init__(self, model, seller, led, parallel_count, series_count, dimensions, versions):
         self.model = model
         self.seller = seller
         self.led = led
-        self.parallel_number = parallel_number
-        self.series_number = series_number
-        self.max_current = max_current
+        self.parallel_count = parallel_count
+        self.series_count = series_count
         self.dimensions = dimensions
         self.versions = versions
 

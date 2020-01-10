@@ -31,16 +31,14 @@ def extract_module_data(product_data, module_data, selected_leds):
         if led not in selected_leds:
             continue
 
-        parallel_number = int(float(module["ParallelNumber"]))
-        series_number = int(float(module["seriesNumber"]))
-
-        max_current = float(module["MaxIf"])
+        parallel_count = int(float(module["ParallelNumber"]))
+        series_count = int(float(module["seriesNumber"]))
 
         dimensions = extract_dimensions(module["Size"])
 
         versions = []
 
-        yield Module(model, seller, led, parallel_number, series_number, max_current, dimensions, versions)
+        yield Module(model, seller, led, parallel_count, series_count, dimensions, versions)
 
         for product in product_data:
 

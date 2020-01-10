@@ -1,7 +1,6 @@
 class LED:
-    def __init__(self, name, min_current, max_current, versions):
+    def __init__(self, name, max_current, versions):
         self.name = name
-        self.min_current = min_current
         self.max_current = max_current
         self.versions = versions
 
