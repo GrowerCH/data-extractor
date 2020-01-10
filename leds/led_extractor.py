@@ -1,36 +1,62 @@
 import json
-import re
 
-import requests
+from leds.led import LED, Version
+from modules.module_extractor import get_needed_led_cct_cri
+from utils.extract_utils import read_text_from_url, extract_json_from_text
 
-from leds.led import LED
 
-
-def start_led_extractor():
+def start_led_extractor(module_data):
     print("\nstarted loading leds...")
 
     url = "https://www.samsung.com/etc/designs/led/global/business/calculator/component-calculator-control/js/data.js"
+
     text = read_text_from_url(url)
-    text_json = extract_led_json(text)
-    data_json = json.loads(text_json[0])
+    json_text = extract_json_from_text(text)
 
-    result = list(extract_led_data(data_json))
-    print(json.dumps(result, default=lambda o: o.__dict__))
+    led_data = json.loads(json_text[0])
+    version_data = json.loads(json_text[1])
+    performance_data = json.loads(json_text[2])
+
+    needed = get_needed_led_cct_cri(module_data)
+
+    led_data = list(extract_important_led_data(led_data, version_data, performance_data, needed))
+    print("leds done")
+
+    return led_data
 
 
-def read_text_from_url(url):
-    return requests.get(url).text
+def extract_important_led_data(led_data, version_data, performance_data, needed):
+    for data in led_data:
 
+        name = data["Name"]
+        if name not in needed["led"]:
+            continue
 
-def extract_led_json(text):
-    return re.findall(r"TAFFY\((.+?)\);", text, re.DOTALL)
+        index = int(data["Index"])
+        min_current = float(data["Sorting_IF"])
+        max_current = float(data["IF_max"])
+        versions = []
 
+        yield LED(name, min_current, max_current, versions)
 
-def extract_led_data(data_json):
-    for led in data_json:
-        name = led["Name"].replace("(", " ").replace(")", "")
-        max_current = float(led["IF_max"])
+        for version in version_data:
+            if version["Name"] != name:
+                continue
 
-        yield LED(name, max_current, [])
+            cct = int(version["CCT"])
+            cri = int(version["CRI"])
+            if cri not in needed["cri"]:
+                continue
 
-        print("done " + name)
+            voltage = float(version["VfRank2"])
+            flux = float(version["FluxRank2"])
+
+            code_index = index * cct * cri + cct + cri
+
+            performance = None
+            for performances in performance_data:
+                if int(performances["CodeIndex"]) == code_index:
+                    performance = performances
+
+            versions.append(
+                Version(cct, cri, voltage, flux, None, performance))

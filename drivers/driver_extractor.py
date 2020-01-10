@@ -1,10 +1,7 @@
-import json
-import os
 import re
 
-from selenium import webdriver
-
 from drivers.driver import Performance, Driver
+from utils.extract_utils import init_browser
 
 
 def start_driver_extractor():
@@ -12,16 +9,12 @@ def start_driver_extractor():
 
     browser = init_browser()
 
-    result = extract_performances(browser)
-    print(json.dumps(result, default=lambda o: o.__dict__))
+    driver_data = extract_performances(browser)
+    print("drivers done")
 
     browser.close()
 
-
-def init_browser():
-    os.environ["MOZ_HEADLESS"] = "1"
-    browser = webdriver.Firefox()
-    return browser
+    return driver_data
 
 
 def extract_performances(browser):
