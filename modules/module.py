@@ -20,3 +20,9 @@ class Dimensions:
     def __init__(self, length, width):
         self.length = length
         self.width = width
+
+
+class ModulePrice:
+    def __init__(self, identifier, diode_price):
+        self.identifier = identifier
+        self.diode_price = diode_price

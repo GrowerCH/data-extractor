@@ -1,5 +1,4 @@
 import json
-import os
 import re
 
 import requests
@@ -25,13 +24,14 @@ def load_json_from_file(file_name):
 
 
 def init_browser():
-    os.environ["MOZ_HEADLESS"] = "1"
+    # os.environ["MOZ_HEADLESS"] = "1"
 
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.cache.offline.enable", False)
     profile.set_preference("network.http.use-cache", False)
+    profile.set_preference("intl.accept_languages", "de-DE, de")
 
     browser = webdriver.Firefox(profile)
 

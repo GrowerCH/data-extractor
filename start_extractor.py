@@ -8,6 +8,8 @@ print("start")
 
 selected_leds = ["LM301B", "LM561C"]
 
+old_module_data = load_json_from_file("module_data.json")
+
 module_data = start_module_extractor(selected_leds)
 save_data_to_file(module_data, "module_data.json")
 
@@ -16,7 +18,7 @@ module_data = load_json_from_file("module_data.json")  # reload
 led_data = start_led_extractor(module_data)
 save_data_to_file(led_data, "led_data.json")
 
-module_data = start_price_extractor(module_data)
+module_data = start_price_extractor(module_data, old_module_data)
 save_data_to_file(module_data, "module_data.json")
 
 driver_data = start_driver_extractor()
