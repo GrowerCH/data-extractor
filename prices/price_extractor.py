@@ -63,13 +63,20 @@ def print_old_price(old_module_data, code, price):
         print(code + ": <")
 
 
-DOLLAR_TO_EURO_CONVERSION = 0.91
+DOLLAR_TO_EURO_CONVERSION = 0.84
 
 
 def load_price_from_octopart(browser, product_code):
     url = "https://octopart.com/search?q=" + product_code
     browser.get(url)
-    time.sleep(2)
+    time.sleep(3)
+
+    try:
+        browser.find_element_by_id("px-captcha")
+        input("Captcha Alarm! Press Enter to continue...")
+        print("Continuing.")
+    except NoSuchElementException:
+        pass
 
     try:
         browser.find_element_by_xpath("//div[contains(@class, 'no-results-found')]")
